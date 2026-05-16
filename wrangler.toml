@@ -1,0 +1,21 @@
+name = "sigil-mcp"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Sigil ships as a separate MCP surface (P35 Shape B, locked 2026-05-13).
+# The MCP server lives on mcp.sigil.tunnelmind.ai; the discovery card is
+# served from sigil.tunnelmind.ai/.well-known/mcp.json. One Worker, both hosts.
+routes = [
+  { pattern = "mcp.sigil.tunnelmind.ai", custom_domain = true },
+  { pattern = "sigil.tunnelmind.ai", custom_domain = true }
+]
+
+# Service binding: runtime call into tunnelmind-data-api without leaving CF.
+# Avoids the same-zone Worker -> Worker fetch loop that returns 522.
+[[services]]
+binding = "API"
+service = "tunnelmind-data-api"
+
+[vars]
+ENVIRONMENT = "production"

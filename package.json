@@ -1,0 +1,11 @@
+{
+  "name": "sigil-mcp",
+  "version": "0.1.0",
+  "description": "Sigil MCP server (P35) — agent-facing tool wrapper around the Sigil supply-verification API",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test test/*.test.js"
+  }
+}
