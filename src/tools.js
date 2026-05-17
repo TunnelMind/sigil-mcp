@@ -149,15 +149,17 @@ export const TOOLS = [
       'Use this tool when:\n' +
       '- A bid request carries an OpenRTB `schain` and you want it verified verbatim.\n\n' +
       'Inputs:\n' +
-      '- `supply_chain` (required): an OpenRTB SupplyChain object ({ ver, complete,\n' +
-      '  nodes:[{asi,sid,...}] }).\n\n' +
-      'Returns: per-node results, an aggregate `verdict`, `recommendations`, and a\n' +
-      'signed `sigil_token`.',
+      '- `schain` (required): an OpenRTB SupplyChain object ({ ver, complete,\n' +
+      '  nodes:[{asi,sid,hp}] }).\n' +
+      '- `site_domain` or `app_bundle` (optional): the inventory origin, checked\n' +
+      '  against node[0] via ads.txt / OWNERDOMAIN.\n\n' +
+      'Returns: per-node `nodes` results, an aggregate `verdict`, `recommendations`,\n' +
+      'and a signed `sigil_token`.',
     inputSchema: {
       type: 'object',
-      required: ['supply_chain'],
+      required: ['schain'],
       properties: {
-        supply_chain: {
+        schain: {
           type: 'object',
           description: 'OpenRTB SupplyChain object.',
           properties: {
@@ -166,6 +168,8 @@ export const TOOLS = [
             nodes: { type: 'array', items: { type: 'object' } },
           },
         },
+        site_domain: { type: 'string' },
+        app_bundle: { type: 'string' },
       },
     },
     call: (a, env, auth) => apiCall(env, 'POST', '/v1/sigil/verify/supply_chain', { body: a, auth }),
