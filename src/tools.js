@@ -26,6 +26,58 @@ async function apiCall(env, method, path, { body, auth } = {}) {
 
 export const TOOLS = [
   {
+    name: 'cross_lens_verify',
+    description:
+      'A2 — the cross-lens join. Fuse TunnelMind\'s two lenses (Scry attacker\n' +
+      'intelligence + Sigil supply graph) into ONE verdict on a single node key.\n' +
+      'This is the moat: no siloed competitor owns both halves of the graph, so\n' +
+      'the fused `cross_lens` block carries information neither lens can supply\n' +
+      'alone.\n\n' +
+      'Use this tool when:\n' +
+      '- An agent must decide whether to transact with an IP, domain, ASN, or\n' +
+      '  entity_slug, and a one-lens answer is not enough.\n' +
+      '- You want a single composite trust verdict instead of running\n' +
+      '  Scry + Sigil calls separately and reconciling them by hand.\n\n' +
+      'Inputs:\n' +
+      '- `node` (required): an IPv4 address, a domain, an ASN (e.g. `AS64500`),\n' +
+      '  or an entity_slug. Type is auto-detected.\n' +
+      '- `weights` (optional): per-component weight overrides.\n' +
+      '- `thresholds` (optional): `{ pass, fail }` verdict cutoffs (defaults 0.7 / 0.3).\n' +
+      '- `ait` (optional): an ATAP AIT id. When present, the verdict is chained\n' +
+      '  onto the AIT as a witness-tier `cross_lens:verified` event signed by\n' +
+      '  Sigil (witness OAI-2026-0000201) — replayable evidence, not just JSON.\n\n' +
+      'Returns: per-lens `scry` + `sigil` blocks (transparency), a fused\n' +
+      '`cross_lens` block with `verdict` / `trust_score` / `confidence` /\n' +
+      '`signals` / `recommendations`, a 5-minute signed `sigil_token`, and a\n' +
+      '`witnessed_event` block when an AIT was supplied.\n\n' +
+      'Failure semantics: each lens fails independently. Single-lens answers\n' +
+      'still return 200 with a `confidence` of 0.55. Returns 503 only when BOTH\n' +
+      'lenses are unavailable.',
+    inputSchema: {
+      type: 'object',
+      required: ['node'],
+      properties: {
+        node: {
+          type: 'string',
+          description: 'The node to verify. IPv4, domain, ASN (AS-prefixed or numeric), or entity_slug.',
+          example: 'nytimes.com',
+        },
+        weights: { type: 'object' },
+        thresholds: { type: 'object' },
+        ait: { type: 'string', description: 'Optional ATAP AIT id to witness this verification under.' },
+      },
+    },
+    call: (a, env, auth) => {
+      const node = a?.node;
+      if (!node || typeof node !== 'string') {
+        return { isError: true, content: [{ type: 'text', text: 'node is required' }] };
+      }
+      const { node: _drop, ...rest } = a;
+      return apiCall(env, 'POST', `/v1/verify/${encodeURIComponent(node)}`, { body: rest, auth });
+    },
+  },
+
+  {
     name: 'sigil_verify_supply_path',
     description:
       'The core pre-bid check. Verify the trustworthiness of one programmatic ad\n' +

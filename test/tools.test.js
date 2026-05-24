@@ -2,10 +2,17 @@ import { test } from 'node:test';
 import assert from 'node:assert';
 import { TOOLS, findTool, listToolsForResponse } from '../src/tools.js';
 
+// Tools published on this MCP surface. Almost all are sigil-namespaced; a small
+// allowlist covers cross-product tools deliberately exposed here too (A2 — the
+// cross-lens join is the same tool name on both data-api MCP and sigil MCP, so
+// agents calling either surface get one consistent answer).
+const CROSS_PRODUCT_TOOL_NAMES = new Set(['cross_lens_verify']);
+
 test('every tool is well-formed', () => {
   assert.ok(TOOLS.length >= 10, 'at least 10 tools');
   for (const t of TOOLS) {
-    assert.ok(t.name && t.name.startsWith('sigil_'), `name: ${t.name}`);
+    const namespaced = t.name?.startsWith('sigil_') || CROSS_PRODUCT_TOOL_NAMES.has(t.name);
+    assert.ok(t.name && namespaced, `name: ${t.name}`);
     assert.ok(typeof t.description === 'string' && t.description.length > 80, `description: ${t.name}`);
     assert.equal(t.inputSchema.type, 'object', `inputSchema: ${t.name}`);
     assert.equal(typeof t.call, 'function', `call: ${t.name}`);
