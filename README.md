@@ -20,6 +20,7 @@ gets its tier, anonymous callers get the free tier. Discovery is unauthenticated
 
 | Tool | Purpose |
 |---|---|
+| `cross_lens_verify` | A2 — fused Scry × Sigil verdict on one node key (IP / domain / entity / ASN). The moat: both lenses, one answer. |
 | `sigil_verify_supply_path` | Composite pre-bid trust verdict + signed token |
 | `sigil_verify_ads_txt` | ads.txt seller-authorization check |
 | `sigil_verify_ip_type` | Datacenter / residential / mobile IP classification |
@@ -30,6 +31,8 @@ gets its tier, anonymous callers get the free tier. Discovery is unauthenticated
 | `sigil_atap_register_ait` | Register an ATAP AIT for a media-buyer agent |
 | `sigil_atap_witness` | Witness a bid/budget event into the attestation chain |
 | `sigil_generate_receipt` | Generate the ATAP compliance Receipt ZIP |
+
+Published in the official MCP registry as `ai.tunnelmind/sigil`.
 
 MCP methods: `initialize`, `tools/list`, `tools/call`, `ping`.
 

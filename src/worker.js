@@ -12,12 +12,13 @@
 import { findTool, listToolsForResponse, TOOLS } from './tools.js';
 
 const PROTOCOL_VERSION = '2025-03-26';
-const SERVER_INFO = { name: 'sigil', version: '0.1.0' };
+const SERVER_INFO = { name: 'sigil', version: '0.2.0' };
 
 const MCP_CARD = {
   schema_version: 'mcp-server-card/1.0-draft',
   name: 'TunnelMind Sigil',
-  description: 'Agentic supply verification: ads.txt, IP classification, app bundle verification, supply path trust scoring, ATAP receipts.',
+  registry_name: 'ai.tunnelmind/sigil',
+  description: 'Agentic supply verification for programmatic advertising: ads.txt authorization, IP classification, app-bundle and supply-path verification, entity trust scoring, ATAP receipts, and the cross_lens_verify fused Scry × Sigil verdict.',
   server_url: 'https://mcp.sigil.tunnelmind.ai',
   transport: 'streamable-http',
   tools_count: TOOLS.length,
