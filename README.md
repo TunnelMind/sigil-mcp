@@ -45,6 +45,6 @@ npm run dev      # local
 npm run deploy   # -> Cloudflare
 ```
 
-## Licence
+## License
 
-MIT.
+[Apache-2.0](./LICENSE).
