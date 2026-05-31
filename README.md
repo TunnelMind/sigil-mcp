@@ -1,5 +1,9 @@
 # sigil-mcp
 
+> **Part of TunnelMind — the intelligence layer agents call before they trust the internet.**
+> Three lenses on one signed corpus: **Scry** (*who is attacking?*) · **Sigil** (*who can you trust?*) · **Tracker Data API** (*who is watching?*).
+> This repo serves: **Sigil** — the MCP-tool surface agents call to verify ad-tech supply paths. See [tunnelmind.ai](https://tunnelmind.ai).
+
 MCP server for **Sigil** — TunnelMind's agentic supply-chain verification layer
 for programmatic advertising (P35).
 
