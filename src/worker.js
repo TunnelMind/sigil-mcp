@@ -10,6 +10,7 @@
 // clients get the free tier (rate-limited). Discovery is always unauthenticated.
 
 import { findTool, listToolsForResponse, TOOLS } from './tools.js';
+import { handlePromptsList, handlePromptsGet } from './prompts.js';
 
 const PROTOCOL_VERSION = '2025-03-26';
 const SERVER_INFO = { name: 'sigil', version: '0.2.0' };
@@ -78,7 +79,10 @@ async function handleMcp(request, env) {
     case 'initialize':
       return jsonRpcResult(id, {
         protocolVersion: PROTOCOL_VERSION,
-        capabilities: { tools: { listChanged: false } },
+        capabilities: {
+          tools: { listChanged: false },
+          prompts: { listChanged: false },
+        },
         serverInfo: SERVER_INFO,
       });
 
@@ -98,6 +102,18 @@ async function handleMcp(request, env) {
         return jsonRpcResult(id, result);
       } catch (e) {
         return jsonRpcError(id, -32603, `tool execution failed: ${e?.message ?? e}`);
+      }
+    }
+
+    case 'prompts/list':
+      return jsonRpcResult(id, handlePromptsList());
+
+    case 'prompts/get': {
+      try {
+        const result = await handlePromptsGet(env, req.params || {});
+        return jsonRpcResult(id, result);
+      } catch (e) {
+        return jsonRpcError(id, e?.code ?? -32603, e?.message ?? String(e));
       }
     }
 
