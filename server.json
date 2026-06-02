@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.tunnelmind/sigil",
   "title": "Sigil",
-  "description": "Agentic supply-chain verification for programmatic advertising: ads.txt authorization, IP classification, app-bundle and supply-path verification, entity trust scoring, ATAP compliance receipts, and the cross_lens_verify fused Scry × Sigil verdict on a single node key.",
+  "description": "Programmatic-advertising supply verification: ads.txt, schain, ATAP receipts, cross_lens_verify.",
   "websiteUrl": "https://tunnelmind.ai",
   "repository": {
     "url": "https://github.com/TunnelMind/sigil-mcp",
