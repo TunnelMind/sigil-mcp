@@ -228,6 +228,49 @@ export const TOOLS = [
   },
 
   {
+    name: 'traverse_supply_chain',
+    description:
+      'Walk the supply graph for a publisher domain and get back the ITEMIZED\n' +
+      'sell paths — distinct from sigil_verify_supply_chain (which verifies a\n' +
+      'schain you BRING) and from the dark-pool-risk signal (which only returns\n' +
+      'counts). Here Sigil reconstructs the paths from its own crawl: every SSP\n' +
+      'the publisher declares it sells through, joined to that SSP\'s identity and\n' +
+      'classified two-sided against the SSP\'s sellers.json.\n\n' +
+      'Use this tool when:\n' +
+      '- You have a publisher domain but no schain, and want to SEE its real\n' +
+      '  authorized supply paths and where the opacity is.\n' +
+      '- dark-pool-risk flagged a publisher and you need the specific contradicted\n' +
+      '  paths driving the risk, not just the aggregate.\n\n' +
+      'Inputs:\n' +
+      '- `domain` (required): the publisher domain, e.g. `cnn.com`.\n' +
+      '- `limit` (optional): max paths returned (default 200, cap 500). The list\n' +
+      '  is ordered riskiest-first (contradicted, then reseller) so a truncated\n' +
+      '  page is still the most useful; the `supply_paths` counts are always over\n' +
+      '  the FULL set.\n\n' +
+      'Returns: `supply_paths` aggregate counts (total / direct / reseller /\n' +
+      'corroborated / contradicted / unchecked) and `paths[]`, each with the SSP\n' +
+      'identity, `seller_id`, `seller_type`, `klass` (corroborated = seat present;\n' +
+      'contradicted = SSP crawled but seller_id absent → real risk; unchecked =\n' +
+      'SSP not yet crawled → not risk), and `resells_to` (one level of downstream\n' +
+      'reseller expansion). Returns in_supply_graph:false if the domain is not in\n' +
+      'the crawled corpus.',
+    inputSchema: {
+      type: 'object',
+      required: ['domain'],
+      properties: {
+        domain: { type: 'string', description: 'Publisher domain to traverse.', example: 'cnn.com' },
+        limit:  { type: 'integer', description: 'Max paths returned (default 200, cap 500).' },
+      },
+    },
+    call: (a, env, auth) => {
+      const domain = typeof a?.domain === 'string' ? a.domain.trim().toLowerCase() : '';
+      if (!domain) return { isError: true, content: [{ type: 'text', text: 'domain is required' }] };
+      const qs = a?.limit != null ? `&limit=${encodeURIComponent(a.limit)}` : '';
+      return apiCall(env, 'GET', `/v1/sigil/traverse?domain=${encodeURIComponent(domain)}${qs}`, { auth });
+    },
+  },
+
+  {
     name: 'sigil_score_entity',
     description:
       'Get the pre-computed trust score for one supply-chain entity (a publisher or\n' +
